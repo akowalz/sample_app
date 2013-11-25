@@ -1,16 +1,39 @@
 SampleApp::Application.routes.draw do
+  #
+  # resources
+  resources :users
 
-  #root path
+  # root path.  This is just the domain name
   root  'static_pages#home'
+  # equal to match '/', to: 'static_pages#home', via: 'get'
 
-  #static pages path
+  #static pages paths.  These are to make the paths a little more succinct 
+  # because these are commonly used pages.  We could just as easily visit
+  # /static_pages/home this just makes it easier. 
   match '/about',   to: 'static_pages#about',   via: 'get'
   match '/help',    to: 'static_pages#help',    via: 'get'
   match '/contact', to: 'static_pages#contact', via: 'get'
 
   #users paths
   match '/signup',  to: 'users#new',             via: 'get'
-  get   'users/new'
+
+  #
+  #
+  # =>      ========= NOTES ON ROUTES AND ROUTING =========
+  #
+  # 
+
+  # Routes matches CONTROLLER ACTIONS to PATHS ON YOUR SITE.
+  # Controller actions are notated in routes as 'controller_name#action_name'
+
+      # Example above:  'match '/about/, to: 'static_pages#about', via: 'get'
+
+  # '/about/' is a path on the website
+  # 'static_pages#about' maps to the about action in the static_pages controller
+
+  #  This also sets up a named route for the path!  about_path which is equal to '/about/'
+   
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

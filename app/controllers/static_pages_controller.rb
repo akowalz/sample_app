@@ -11,3 +11,12 @@ class StaticPagesController < ApplicationController
   def contact
   end
 end
+
+
+#
+#
+# NOTES on Controllers and ApplicationController
+#
+#
+
+# These actions can use 
