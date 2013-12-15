@@ -1,11 +1,25 @@
 class User < ActiveRecord::Base
   before_save { email.downcase! }
+  before_create :create_remember_token
   validates :name, presence: true, length: { maximum: 50 } 
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :email, presence: true, format: { with: VALID_EMAIL_REGEX },
             uniqueness: { case_sensitive: false } 
   has_secure_password
   validates :password, length: { minimum: 6 }
+
+  def User.new_remember_token
+    SecureRandom.urlsafe_base64
+  end
+
+  def User.encrypt(token)
+    Digest::SHA1.hexdigest(token.to_s)
+  end
+
+  private
+    def create_remember_token
+      self.remember_token = User.encrypt(User.new_remember_token) 
+    end
 end
 
 #
@@ -37,5 +51,5 @@ end
 
 # That article we found recognized this is "the chubby guy in the back".  Good analogy.
 # I like to think of the database as a ferocious creature that must be handled in a particular
-# way or it gets mad and does very bad things.  As such, it takes specialized code to work with it,
-# for this reason, we hand the job over to the master "ActiveRecord::Base"
+# way or it gets mad and does very Bad Things.  As such, it takes specialized code to work with it,
+# for this reason, we hand the job over to the brave warrior ActiveRecord::Base
