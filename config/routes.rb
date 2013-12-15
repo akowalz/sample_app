@@ -2,6 +2,8 @@ SampleApp::Application.routes.draw do
   #
   # resources
   resources :users
+  #to specsify only, pass a hash with an array of symbols to include
+  resources :sessions, only: [:new, :create, :destroy]
 
   # root path.  This is just the domain name
   root  'static_pages#home'
@@ -17,12 +19,19 @@ SampleApp::Application.routes.draw do
   #users paths
   match '/signup',  to: 'users#new',             via: 'get'
 
+  #sessions paths
+  match '/signin',   to: 'sessions#new',         via: 'get'
+  match '/signout',  to: 'sessions#destroy',     via: 'delete'
+
+
+
   #
   #
   # =>      ========= NOTES ON ROUTES AND ROUTING =========
   #
-  # 
-
+  #  TIP: to get all routes use:
+  # => $ rake routes
+  #
   # Routes matches CONTROLLER ACTIONS to PATHS ON YOUR SITE.
   # Controller actions are notated in routes as 'controller_name#action_name'
 
@@ -31,7 +40,7 @@ SampleApp::Application.routes.draw do
   # '/about/' is a path on the website
   # 'static_pages#about' maps to the about action in the static_pages controller
 
-  #  This also sets up a named route for the path!  about_path which is equal to '/about/'
+  #  This also sets up a named route for the path!  about_path which is equal toggleable '/about/'
    
 
   # The priority is based upon order of creation: first created -> highest priority.
