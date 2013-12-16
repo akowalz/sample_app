@@ -15,6 +15,12 @@ module SessionsHelper
   end
 
   def current_user
+    # So here's the magic!  current user is a METHOD that will return the user
+    # It just grabs the remember token from the cookie
+    # encrypts it
+    # and finds the appropriate user from the database
+    # Now, we can use current_user as if it were just a user like:
+    # current_user.name 
     remember_token = User.encrypt(cookies[:remember_token])
     @current_user ||= User.find_by(remember_token: remember_token)
   end

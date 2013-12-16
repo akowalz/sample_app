@@ -1,5 +1,7 @@
 class User < ActiveRecord::Base
+  # passes an explicit block instead of a method
   before_save { email.downcase! }
+  # Method reference, searches for method called create_remmeber_token
   before_create :create_remember_token
   validates :name, presence: true, length: { maximum: 50 } 
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
@@ -8,6 +10,7 @@ class User < ActiveRecord::Base
   has_secure_password
   validates :password, length: { minimum: 6 }
 
+  # static methods I think? Because they start with User.
   def User.new_remember_token
     SecureRandom.urlsafe_base64
   end
@@ -16,8 +19,12 @@ class User < ActiveRecord::Base
     Digest::SHA1.hexdigest(token.to_s)
   end
 
+  # and here it is!
   private
     def create_remember_token
+      # assigns to the user, making the self keyword relevant
+      # ensures that we're not assigning to a local variable, 
+      # using self saves to the database when used in model code
       self.remember_token = User.encrypt(User.new_remember_token) 
     end
 end
