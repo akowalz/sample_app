@@ -18,13 +18,13 @@ describe 'User Pages' do
 
     describe "pagination" do
 
-      before(:all) { 30.times { FactoryGirl.create(:user) } }
+      before(:all) { 10.times { FactoryGirl.create(:user) } }
       after(:all)  { User.delete_all }
 
       it { should have_selector('div.pagination') }
 
       it "should list each user" do
-        User.paginate(page: 1).each do |user|
+        User.paginate(page: 1, per_page: 5).each do |user|
           expect(page).to have_selector('li', text: user.name)
         end
       end
@@ -80,7 +80,7 @@ describe 'User Pages' do
         fill_in "Name", with: "Example User"
         fill_in "Email", with: "user@example.com"
         fill_in "Password", with: "foobar"
-        fill_in "Confirmation", with: "foobar"
+        fill_in "Confirm Password", with: "foobar"
       end  
 
       it "should create a user" do
@@ -158,6 +158,18 @@ describe 'User Pages' do
       before { click_button "Save changes" }
 
       it { should have_content('error') }
+    end
+
+    describe "forbidden attributes" do
+      let(:params) do
+        { user: { admin: true, password: user.password,
+                  password_confirmation: user.password } }
+      end
+      before do
+        sign_in user, no_capybara: true
+        patch user_path(user), params
+      end
+      specify { expect(user.reload).not_to be_admin } 
     end
   end
 end

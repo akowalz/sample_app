@@ -1,12 +1,12 @@
 class UsersController < ApplicationController
   # will cause the singed in user method to be called before the specified methods
   # used for authorization
-  before_action :signed_in_user, only: [:edit, :update, :index]
+  before_action :signed_in_user, only: [:edit, :update, :index, :new, :create]
   before_action :correct_user,   only: [:edit, :update]
   before_action :admin_user ,    only: :destroy
 
   def index
-    @users = User.paginate(page: params[:page] )
+    @users = User.paginate(page: params[:page], per_page: 5 )
   end
 
   def show
