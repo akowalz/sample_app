@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   # will cause the singed in user method to be called before the specified methods
   # used for authorization
-  before_action :signed_in_user, only: [:edit, :update, :index, :new, :create]
+  before_action :signed_in_user, only: [:edit, :update, :index]
   before_action :correct_user,   only: [:edit, :update]
   before_action :admin_user ,    only: :destroy
 
@@ -11,6 +11,7 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
+    @microposts = @user.microposts.paginate(page: params[:page])
   end
 
   def new
@@ -55,18 +56,6 @@ class UsersController < ApplicationController
     end
 
     # Before filters
-    def signed_in_user
-      unless signed_in?
-        store_location
-        redirect_to signin_url, notice: "Please sign in." 
-     end
-   end
-      # equivalent to 
-      # unless signed_in?
-      #   flash[:notice] = "Please sign in."
-      #   redirect_to signin_url
-      # end
-
     def correct_user
       @user = User.find(params[:id])
       redirect_to(root_url) unless current_user?(@user)

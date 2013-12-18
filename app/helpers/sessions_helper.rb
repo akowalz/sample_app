@@ -29,6 +29,18 @@ module SessionsHelper
     user == current_user
   end
 
+  def signed_in_user
+    unless signed_in?
+      store_location
+      redirect_to signin_url, notice: "Please sign in." 
+    end
+  end
+  # equivalent to 
+    # unless signed_in?
+    #   flash[:notice] = "Please sign in."
+    #   redirect_to signin_url
+    # end
+
   def signed_in?
     !current_user.nil? 
   end

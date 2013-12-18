@@ -1,4 +1,5 @@
 class User < ActiveRecord::Base
+  has_many :microposts, dependent: :destroy
   # passes an explicit block instead of a method
   before_save { email.downcase! }
   # Method reference, searches for method called create_remmeber_token
@@ -10,7 +11,13 @@ class User < ActiveRecord::Base
   has_secure_password
   validates :password, length: { minimum: 6 }
 
-  # static methods I think? Because they start with User.
+
+  def feed
+    # This is prelimiary, Following users will update this
+    Micropost.where("user_id = ?", id)
+  end
+
+
   def User.new_remember_token
     SecureRandom.urlsafe_base64
   end

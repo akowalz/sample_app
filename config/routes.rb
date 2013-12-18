@@ -4,6 +4,7 @@ SampleApp::Application.routes.draw do
   resources :users
   #to specsify only, pass a hash with an array of symbols to include
   resources :sessions, only: [:new, :create, :destroy]
+  resources :microposts, only: [:create, :destroy]
 
   # root path.  This is just the domain name
   root  'static_pages#home'
