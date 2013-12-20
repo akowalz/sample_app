@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   # will cause the singed in user method to be called before the specified methods
   # used for authorization
-  before_action :signed_in_user, only: [:edit, :update, :index]
+  before_action :signed_in_user, only: [:edit, :update, :index, :following, :followers]
   before_action :correct_user,   only: [:edit, :update]
   before_action :admin_user ,    only: :destroy
 
@@ -45,6 +45,20 @@ class UsersController < ApplicationController
     User.find(params[:id]).destroy
     flash[:success] = "User deleted."
     redirect_to users_url
+  end
+
+  def following
+    @title = "Following"
+    @user = User.find(params[:id])
+    @users = @user.followed_users.paginate(page: params[:page])
+    render 'show_follow'
+  end 
+
+  def followers
+    @title = "Followers"
+    @user = User.find(params[:id])
+    @users = @user.followers.paginate(page: params[:page])
+    render 'show_follow'
   end
 
   private

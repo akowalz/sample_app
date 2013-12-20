@@ -1,16 +1,21 @@
 SampleApp::Application.routes.draw do
   #
   # resources
-  resources :users
-  #to specsify only, pass a hash with an array of symbols to include
-  resources :sessions, only: [:new, :create, :destroy]
-  resources :microposts, only: [:create, :destroy]
+  resources :users do
+    member do
+      get :following, :followers
+    end
+  end
+  
+  resources :sessions,      only: [:new, :create, :destroy]
+  resources :microposts,    only: [:create, :destroy]
+  resources :relationships, only: [:create, :destroy]
 
   # root path.  This is just the domain name
   root  'static_pages#home'
   # equal to match '/', to: 'static_pages#home', via: 'get'
 
-  #static pages paths.  These are to make the paths a little more succinct 
+  # static pages paths.  These are to make the paths a little more succinct 
   # because these are commonly used pages.  We could just as easily visit
   # /static_pages/home this just makes it easier. 
   match '/about',   to: 'static_pages#about',   via: 'get'
@@ -41,7 +46,7 @@ SampleApp::Application.routes.draw do
   # '/about/' is a path on the website
   # 'static_pages#about' maps to the about action in the static_pages controller
 
-  #  This also sets up a named route for the path!  about_path which is equal toggleable '/about/'
+  #  This also sets up a named route for the path!  about_path which is equal to '/about/'
    
 
   # The priority is based upon order of creation: first created -> highest priority.
